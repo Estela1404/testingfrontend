@@ -8,12 +8,14 @@ import AdminDashboard from './pages/AdminDashboard';
 import AgregarIngreso from './pages/AgregarIngreso';
 import AgregarGasto from './pages/AgregarGasto';
 import AgregarTransferencia from './pages/AgregarTransferencia';
+import Transferencia from './pages/Transferencia';
 import HistorialIngresos from './pages/HistorialIngresos';
 import ProtectedRoute from './pages/ProtectedRoute';
 import ListaIngresos from './pages/ListaIngresos';
 import ListaGastos from './pages/ListaGastos';
 import Recuperar from './pages/Recuperar';
 import Reestablecer from './pages/Reestablecer';
+import Recurrente from './pages/Recurrentes'; // ✅ Aquí corregido
 
 const App = () => {
   return (
@@ -23,7 +25,7 @@ const App = () => {
         <Route path='/' element={<Home />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
-        <Route path="/forgot-password" element={<Recuperar />} />
+        <Route path='/forgot-password' element={<Recuperar />} />
         <Route path='/reestablecer/:token' element={<Reestablecer />} />
 
         {/* Rutas protegidas */}
@@ -64,6 +66,22 @@ const App = () => {
           element={
             <ProtectedRoute>
               <AgregarTransferencia />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/transferencia'
+          element={
+            <ProtectedRoute>
+              <Transferencia />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/recurrente'
+          element={
+            <ProtectedRoute>
+              <Recurrente />
             </ProtectedRoute>
           }
         />

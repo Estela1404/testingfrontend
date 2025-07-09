@@ -13,8 +13,15 @@ const AgregarIngreso = () => {
     return today.toISOString().split('T')[0];
   });
 
-  const opcionesCuentas = ['Nequi', 'Daviplata', 'Bancolombia', 'Banco de Bogotá', 'BBVA', 'Nu', 'Banco de Occidente', 'Davivienda', 'Efectivo', 'Otro'];
-  const opcionesCategorias = ['Salario', 'Honorarios', 'Ventas', 'Regalo', 'Reembolso', 'Intereses', 'Otro Ingreso'];
+  const opcionesCuentas = [
+    'Nequi', 'Daviplata', 'Bancolombia', 'Banco de Bogotá', 'BBVA',
+    'Nu', 'Banco de Occidente', 'Davivienda', 'Efectivo', 'Otro'
+  ];
+
+  const opcionesCategorias = [
+    'Salario', 'Honorarios', 'Ventas', 'Regalo',
+    'Reembolso', 'Intereses', 'Otro Ingreso'
+  ];
 
   const colores = {
     fondo: '#1E293B',
@@ -66,7 +73,6 @@ const AgregarIngreso = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    const correo = localStorage.getItem('correo');
 
     if (!token || token === "null" || token === "undefined") {
       alert('No estás autenticado o el token no es válido.');
@@ -79,8 +85,7 @@ const AgregarIngreso = () => {
       cuenta,
       categoria,
       fecha,
-      tipo: 'ingreso',
-      correoPersona: correo // Aquí se añade explícitamente el correo
+      tipo: 'ingreso'
     };
 
     const config = {
@@ -91,12 +96,16 @@ const AgregarIngreso = () => {
     };
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/ingresos`, nuevoIngreso, config);
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/ingresos`,
+        nuevoIngreso,
+        config
+      );
       alert('Ingreso registrado exitosamente');
       setMonto('');
       navigate('/dashboard');
     } catch (error) {
-      console.error('Error al registrar ingreso:', error);
+      console.error('Error al registrar ingreso:', error.response || error);
       alert('Hubo un error al registrar el ingreso.');
     }
   };
@@ -129,47 +138,89 @@ const AgregarIngreso = () => {
 
         <div style={estiloCampo}>
           <label htmlFor="monto" style={estiloLabel}>Cantidad</label>
-          <input id="monto" type="number" value={monto} onChange={e => setMonto(e.target.value)} style={estiloInput} placeholder="Ej: 2500000" required min="0.01" step="any" />
+          <input
+            id="monto"
+            type="number"
+            value={monto}
+            onChange={e => setMonto(e.target.value)}
+            style={estiloInput}
+            placeholder="Ej: 2500000"
+            required
+            min="0.01"
+            step="any"
+          />
         </div>
 
         <div style={estiloCampo}>
           <label htmlFor="cuenta" style={estiloLabel}>Entidad Bancaria / Cuenta</label>
-          <select id="cuenta" value={cuenta} onChange={e => setCuenta(e.target.value)} style={estiloSelect} required>
-            {opcionesCuentas.map(opcion => <option key={opcion} value={opcion}>{opcion}</option>)}
+          <select
+            id="cuenta"
+            value={cuenta}
+            onChange={e => setCuenta(e.target.value)}
+            style={estiloSelect}
+            required
+          >
+            {opcionesCuentas.map(opcion => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
         </div>
 
         <div style={estiloCampo}>
           <label htmlFor="categoria" style={estiloLabel}>Categoría</label>
-          <select id="categoria" value={categoria} onChange={e => setCategoria(e.target.value)} style={estiloSelect} required>
-            {opcionesCategorias.map(opcion => <option key={opcion} value={opcion}>{opcion}</option>)}
+          <select
+            id="categoria"
+            value={categoria}
+            onChange={e => setCategoria(e.target.value)}
+            style={estiloSelect}
+            required
+          >
+            {opcionesCategorias.map(opcion => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
         </div>
 
         <div style={estiloCampo}>
           <label htmlFor="descripcion" style={estiloLabel}>Descripción</label>
-          <input id="descripcion" type="text" value={descripcion} onChange={e => setDescripcion(e.target.value)} style={estiloInput} placeholder="Ej: Pago quincenal" />
+          <input
+            id="descripcion"
+            type="text"
+            value={descripcion}
+            onChange={e => setDescripcion(e.target.value)}
+            style={estiloInput}
+            placeholder="Ej: Pago quincenal"
+          />
         </div>
 
         <div style={estiloCampo}>
           <label htmlFor="fecha" style={estiloLabel}>Fecha</label>
-          <input id="fecha" type="date" value={fecha} onChange={e => setFecha(e.target.value)} style={estiloInput} required />
+          <input
+            id="fecha"
+            type="date"
+            value={fecha}
+            onChange={e => setFecha(e.target.value)}
+            style={estiloInput}
+            required
+          />
         </div>
 
-        <button type="submit" style={{
-          width: '100%',
-          padding: '1rem',
-          backgroundColor: colores.boton,
-          color: 'white',
-          fontSize: '1.1rem',
-          fontWeight: 'bold',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          marginTop: '1.5rem',
-          boxShadow: `0 4px 10px rgba(0,0,0,0.2), 0 0 0 2px ${colores.botonHover} inset`,
-          transition: 'background-color 0.2s ease, transform 0.1s ease'
-        }}
+        <button
+          type="submit"
+          style={{
+            width: '100%',
+            padding: '1rem',
+            backgroundColor: colores.boton,
+            color: 'white',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            marginTop: '1.5rem',
+            boxShadow: `0 4px 10px rgba(0,0,0,0.2), 0 0 0 2px ${colores.botonHover} inset`,
+            transition: 'background-color 0.2s ease, transform 0.1s ease'
+          }}
           onMouseOver={e => e.currentTarget.style.backgroundColor = colores.botonHover}
           onMouseOut={e => e.currentTarget.style.backgroundColor = colores.boton}
           onMouseDown={e => e.currentTarget.style.transform = 'scale(0.98)'}

@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FiMail, FiLock } from "react-icons/fi";
@@ -14,17 +13,21 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login"`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ correo, password }),
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ correo, password }),
+          credentials: "include",
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.msg || "Error en la respuesta del servidor");
+        // Aquí capturamos message Y msg por si acaso
+        throw new Error(data.message || data.msg || "Error en la respuesta del servidor");
       }
 
       const { token, user } = data;
@@ -34,10 +37,13 @@ const Login = () => {
         return;
       }
 
+      // Guardar datos en localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("documentoidentidad", user.documentoidentidad);
+      localStorage.setItem("correo", user.correo);
 
+      // Redirigir según el rol
       if (user.rol === "admin") {
         navigate("/admin-dashboard");
       } else {

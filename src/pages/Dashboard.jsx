@@ -7,10 +7,8 @@ export const Dashboard = () => {
   const [totalIngresos, setTotalIngresos] = useState(0);
   const [totalGastos, setTotalGastos] = useState(0);
 
-  // Estado para la fecha actual del mes
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  // Paleta de colores y fuente
   const pageBackgroundColor = '#212C3A';
   const containerBackgroundColor = '#1A202C';
   const cardBackgroundColor = '#2D3748';
@@ -28,14 +26,12 @@ export const Dashboard = () => {
     minHeight: '100vh',
   };
 
-  // Cambiar mes
   const changeMonth = (offset) => {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + offset);
     setCurrentDate(newDate);
   };
 
-  // Nombres de meses
   const monthNames = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -72,8 +68,8 @@ export const Dashboard = () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    // Obtener ingresos
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/ingresos/total`, {
+    // ✅ Obtener ingresos con el cambio que suma los montos
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/ingresos`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -83,7 +79,8 @@ export const Dashboard = () => {
         return res.json();
       })
       .then((data) => {
-        setTotalIngresos(data.total || 0);
+        const total = data.reduce((sum, ingreso) => sum + Number(ingreso.monto || 0), 0);
+        setTotalIngresos(total);
       })
       .catch((error) => console.error("Error al obtener ingresos:", error));
 
@@ -119,7 +116,6 @@ export const Dashboard = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-start pt-6 sm:pt-8 pb-8 px-4" style={overallPageStyle}>
       <div className="p-4 sm:p-5 rounded-xl shadow-2xl w-full max-w-xs sm:max-w-sm" style={{ backgroundColor: containerBackgroundColor }}>
-        {/* Bienvenida */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold" style={{ color: headingColor }}>
             Bienvenido
@@ -132,7 +128,6 @@ export const Dashboard = () => {
           </p>
         </div>
 
-        {/* Navegador de fechas */}
         <div className="mb-6 text-center">
           <div className="flex justify-between items-center mb-1.5 px-2">
             <span
@@ -158,7 +153,6 @@ export const Dashboard = () => {
           </p>
         </div>
 
-        {/* Tarjeta de Balance */}
         <div className="p-4 rounded-lg shadow-lg mb-6" style={{ backgroundColor: cardBackgroundColor }}>
           <h2 className="text-sm font-semibold text-center mb-3 py-1.5 rounded-sm" style={{ color: headingColor, backgroundColor: 'rgba(0,0,0,0.15)' }}>
             BALANCE MENSUAL
@@ -183,7 +177,6 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        {/* Acciones */}
         <div className="p-3 rounded-lg shadow-lg space-y-2.5 mb-8" style={{ backgroundColor: cardBackgroundColor }}>
           <ActionButton icon="−" label="Nuevo Ingreso" onClick={() => navigate('/agregar-ingreso')} />
           <ActionButton icon="+" label="Nuevo Gasto" onClick={() => navigate('/agregar-gasto')} />
@@ -193,7 +186,6 @@ export const Dashboard = () => {
           <ActionButton icon="💸" label="Lista de Gastos" onClick={() => navigate('/lista-gastos')} />
         </div>
 
-        {/* Cerrar Sesión */}
         <div className="text-center">
           <button
             onClick={handleLogout}

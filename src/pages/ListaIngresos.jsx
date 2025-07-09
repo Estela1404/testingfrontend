@@ -67,9 +67,6 @@ const estilos = {
     marginTop: '10px',
     transition: 'background-color 0.3s ease',
     alignSelf: 'center'
-  },
-  botonVolverHover: {
-    backgroundColor: '#7d8599'
   }
 };
 
@@ -92,7 +89,7 @@ function ListaIngresos() {
       }
 
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}api/ingresos/mis-ingresos`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/ingresos`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -141,7 +138,9 @@ function ListaIngresos() {
             <div key={ingreso._id} style={estilos.item}>
               <div style={estilos.descripcionFecha}>
                 <span>{ingreso.descripcion}</span>
-                <span style={estilos.fecha}>{new Date(ingreso.fecha).toLocaleDateString()}</span>
+                <span style={estilos.fecha}>
+                  {new Date(ingreso.fecha).toLocaleDateString()}
+                </span>
               </div>
               <div style={estilos.monto}>
                 ${typeof ingreso.monto === 'number'
@@ -152,7 +151,9 @@ function ListaIngresos() {
           ))
         )}
       </div>
-      <button style={estilos.botonVolver} onClick={handleVolverDashboard}>Cerrar</button>
+      <button style={estilos.botonVolver} onClick={handleVolverDashboard}>
+        Cerrar
+      </button>
     </div>
   );
 }

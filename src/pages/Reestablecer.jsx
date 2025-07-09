@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Reestablecer = () => {
   const { token } = useParams();
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
@@ -13,11 +14,14 @@ const Reestablecer = () => {
     setError("");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/reestablecer/${token}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/reestablecer/${token}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+        }
+      );
 
       const data = await res.json();
 
@@ -31,6 +35,9 @@ const Reestablecer = () => {
       setError("Error de conexión con el servidor.");
     }
   };
+
+  const accentColor = "#38B2AC";
+  const buttonTextColor = "#FFFFFF";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#1b2a38]">
@@ -55,12 +62,34 @@ const Reestablecer = () => {
         >
           Cambiar contraseña
         </button>
+
         {mensaje && (
-          <p className="text-green-400 mt-4 text-center">{mensaje}</p>
+          <div className="mt-4 text-center">
+            <p className="text-green-400 mb-4">{mensaje}</p>
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="w-full px-4 py-2 rounded-md transition-colors duration-200 ease-in-out font-semibold shadow-md text-sm"
+              style={{
+                backgroundColor: accentColor,
+                color: buttonTextColor,
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "#2C7A7B")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = accentColor)
+              }
+            >
+              Volver a la página de inicio
+            </button>
+          </div>
         )}
+
         {error && (
           <p className="text-red-400 mt-4 text-center">{error}</p>
         )}
+
         <p className="text-gray-400 mt-6 text-center text-sm">
           Usa una contraseña segura que recuerdes fácilmente.
         </p>
